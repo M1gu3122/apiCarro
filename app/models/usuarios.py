@@ -7,8 +7,8 @@ class Usuarios(BaseModel):
     id_usuario: Optional[int] = None
     nombre: str
     correo: EmailStr
-    contraseña_hash: str
-    estado: bool
+    contrasena_hash: str
+    estado: bool 
     creado: Optional[datetime] = None
     actualizado: Optional[datetime] = None
     id_rol: int

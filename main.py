@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from app.api import rutas_estudiantes
+from app.api import rutas_usuarios
+from app.api import rutas_roles
 
 app = FastAPI(
     title="API de Desempeño Estudiantil",
@@ -8,7 +9,8 @@ app = FastAPI(
 )
 
 # Conectamos el módulo de rutas a la aplicación principal
-app.include_router(rutas_estudiantes.router)
+app.include_router(rutas_usuarios.router)
+app.include_router(rutas_roles.router)
 
 @app.get("/")
 def estado_api():
