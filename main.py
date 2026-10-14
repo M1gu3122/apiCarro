@@ -49,4 +49,4 @@ app.include_router(rutas_usuarios.router)
 app.include_router(rutas_vehiculos.router)
 app.include_router(rutas_visitas.router)
 app.include_router(rutas_zonas.router)
-app.include_router(auth_router)  # Router de autenticación JWT
+app.include_router(auth_router) 
