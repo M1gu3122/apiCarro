@@ -12,12 +12,10 @@ from app.api import (
     rutas_roles,
     rutas_seguimientos,
     rutas_tipos_vehiculo,
-    rutas_usuarios,
-    rutas_vehiculos,
-    rutas_visitas,
     rutas_zonas,
+    rutas_usuarios,
+    auth_routes
 )
-from app.api.rutas_auth import router as auth_router  # Importar el router en sí
 
 app = FastAPI(
     title="API de Monitoreo y Control Vehicular",
@@ -45,8 +43,6 @@ app.include_router(rutas_ocupacion_zona.router)
 app.include_router(rutas_roles.router)
 app.include_router(rutas_seguimientos.router)
 app.include_router(rutas_tipos_vehiculo.router)
-app.include_router(rutas_usuarios.router)
-app.include_router(rutas_vehiculos.router)
-app.include_router(rutas_visitas.router)
 app.include_router(rutas_zonas.router)
-app.include_router(auth_router) 
+app.include_router(rutas_usuarios.router)
+app.include_router(auth_routes.router)

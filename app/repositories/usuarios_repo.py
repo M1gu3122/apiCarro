@@ -1,5 +1,6 @@
 from app.core.database import Database
 from app.models.usuarios import Usuarios
+import bcrypt
 
 class UsuariosRepository:
     def __init__(self):
@@ -22,14 +23,33 @@ class UsuariosRepository:
         conn.close()
         return Usuarios
 
+
+    def obtener_por_correo(self, correo: str):
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+
+        try:
+            cursor.execute(
+                """
+                SELECT *
+                FROM usuarios
+                WHERE correo = %s;
+                """,
+                (correo,)
+            )
+
+            return cursor.fetchone()
+
+        finally:
+            conn.close()
     def crear(self, usuario: Usuarios):
         conn = self.db.get_connection()
         cursor = conn.cursor()
         query = """
-            INSERT INTO usuarios (nombre, correo, contrasena_hash,estado,creado,actualizado,id_rol) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id_usuario;
+            INSERT INTO usuarios (nombre, correo, contrasena_hash,estado,id_rol) 
+            VALUES (%s, %s, %s, %s, %s) RETURNING id_usuario;
         """
-        cursor.execute(query, (usuario.nombre, usuario.correo, usuario.contrasena_hash, usuario.estado, usuario.creado, usuario.actualizado, usuario.id_rol))
+        cursor.execute(query, (usuario.nombre, usuario.correo, usuario.contrasena_hash, usuario.estado,usuario.id_rol))
         nuevo_id = cursor.fetchone()['id_usuario']
         conn.commit()
         conn.close()

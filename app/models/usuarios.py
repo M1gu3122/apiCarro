@@ -8,7 +8,7 @@ class Usuarios(BaseModel):
     nombre: str
     correo: EmailStr
     contrasena_hash: str
-    estado: bool 
+    estado: bool = True
     creado: Optional[datetime] = None
     actualizado: Optional[datetime] = None
     id_rol: int
@@ -16,7 +16,11 @@ class Usuarios(BaseModel):
 
 
     
-    
+class UsuarioCrear(BaseModel):
+    nombre: str
+    correo: EmailStr
+    contrasena: str
+    id_rol: int
 
 
     
