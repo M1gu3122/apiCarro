@@ -1,0 +1,59 @@
+from app.core.database import Database
+from app.models.eventos_vehiculo import EventoVehiculo
+
+class Eventos_vehiculoRepository:
+    def __init__(self):
+        self.db = Database()
+
+    def obtener_todos(self):
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM eventos_vehiculo ORDER BY id_evento ASC;")
+        eventos = cursor.fetchall()
+        conn.close()
+        return eventos
+
+    def obtener_por_id(self, id_evento: int):
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM eventos_vehiculo WHERE id_evento = %s;", (id_evento,))
+        evento = cursor.fetchone()
+        conn.close()
+        return evento
+
+    def crear(self, evento: EventoVehiculo):
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        query = """
+            INSERT INTO eventos_vehiculo (tipo_evento,fecha_hora,confianza,estado,creado,actualizado,id_visita,id_camara,id_seguimiento,id_zona) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id_evento;
+        """
+        cursor.execute(query, (evento.tipo_evento, evento.fecha_hora, evento.confianza, evento.estado, evento.creado, evento.actualizado, evento.id_visita, evento.id_camara, evento.id_seguimiento, evento.id_zona))
+        nuevo_evento = cursor.fetchone()['id_evento']
+        conn.commit()
+        conn.close()
+        return nuevo_evento
+
+    def eliminar(self, id_evento: int):
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM eventos_vehiculo WHERE id_evento = %s RETURNING id_evento;", (id_evento,))
+        evento_eliminado = cursor.fetchone()
+        conn.commit()
+        conn.close()
+        return evento_eliminado is not None
+
+    def actualizar(self, id_evento: int, evento: EventoVehiculo):
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        query = """
+            UPDATE eventos_vehiculo
+            SET tipo_evento = %s, fecha_hora = %s, confianza = %s, estado = %s, creado = %s, actualizado = %s, id_visita = %s, id_camara = %s, id_seguimiento = %s, id_zona = %s
+            WHERE id_evento = %s
+            RETURNING id_evento;
+        """
+        cursor.execute(query, (evento.tipo_evento, evento.fecha_hora, evento.confianza, evento.estado, evento.creado, evento.actualizado, evento.id_visita, evento.id_camara, evento.id_seguimiento, evento.id_zona, id_evento))
+        evento_actualizado = cursor.fetchone()
+        conn.commit()
+        conn.close()
+        return evento_actualizado is not None

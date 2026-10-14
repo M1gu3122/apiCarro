@@ -1,5 +1,4 @@
 from fastapi import APIRouter, HTTPException
-from app.models.usuarios import Usuarios
 from app.repositories.roles_repo import Roles
 from app.repositories.roles_repo import RolesRepository
 

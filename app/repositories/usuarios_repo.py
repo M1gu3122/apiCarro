@@ -9,15 +9,15 @@ class UsuariosRepository:
     def obtener_todos(self):
         conn = self.db.get_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM usuarios ORDER BY id ASC;")
-        Usuarioss = cursor.fetchall()
+        cursor.execute("SELECT * FROM usuarios ORDER BY id_usuario ASC;")
+        usuario = cursor.fetchall()
         conn.close()
-        return Usuarioss
+        return usuario
 
     def obtener_por_id(self, id_usuario: int):
         conn = self.db.get_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM Usuarioss WHERE id = %s;", (id_usuario,))
+        cursor.execute("SELECT * FROM usuarios WHERE id = %s;", (id_usuario,))
         Usuarios = cursor.fetchone()
         conn.close()
         return Usuarios
@@ -38,7 +38,7 @@ class UsuariosRepository:
     def eliminar(self, id_usuario: int):
         conn = self.db.get_connection()
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM Usuarioss WHERE id = %s RETURNING id;", (id_usuario,))
+        cursor.execute("DELETE FROM usuarios WHERE id = %s RETURNING id;", (id_usuario,))
         eliminado = cursor.fetchone()
         conn.commit()
         conn.close()
@@ -48,7 +48,7 @@ class UsuariosRepository:
         conn = self.db.get_connection()
         cursor = conn.cursor()
         query = """
-            UPDATE Usuarioss
+            UPDATE usuarios
             SET nombre = %s, grado = %s, promedio = %s
             WHERE id = %s
             RETURNING id;
