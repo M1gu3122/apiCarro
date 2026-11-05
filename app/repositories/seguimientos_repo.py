@@ -25,10 +25,10 @@ class SeguimientosRepository:
         conn = self.db.get_connection()
         cursor = conn.cursor()
         query = """
-            INSERT INTO seguimientos (id_tracking,inicio,fin,confianza_promedio,estado,creado,actualizado,id_visita,id_camara) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id_seguimiento;
+            INSERT INTO seguimientos (id_tracking,inicio,fin,confianza_promedio,estado,id_visita,id_camara) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id_seguimiento;
         """
-        cursor.execute(query, (seguimiento.id_tracking, seguimiento.inicio, seguimiento.fin, seguimiento.confianza_promedio, seguimiento.estado, seguimiento.creado, seguimiento.actualizado, seguimiento.id_visita, seguimiento.id_camara))
+        cursor.execute(query, (seguimiento.id_tracking, seguimiento.inicio, seguimiento.fin, seguimiento.confianza_promedio, seguimiento.estado, seguimiento.id_visita, seguimiento.id_camara))
         nuevo_seguimiento = cursor.fetchone()['id_seguimiento']
         conn.commit()
         conn.close()
@@ -48,11 +48,11 @@ class SeguimientosRepository:
         cursor = conn.cursor()
         query = """
             UPDATE seguimientos
-            SET id_tracking = %s, fin = %s, confianza_promedio = %s, estado = %s, creado = %s, actualizado = %s, id_visita = %s, id_camara = %s
+            SET id_tracking = %s, fin = %s, confianza_promedio = %s, estado = %s, id_visita = %s, id_camara = %s
             WHERE id_seguimiento = %s
             RETURNING id_seguimiento;
         """
-        cursor.execute(query, (seguimiento.id_tracking, seguimiento.fin, seguimiento.confianza_promedio, seguimiento.estado, seguimiento.creado, seguimiento.actualizado, seguimiento.id_visita, seguimiento.id_camara, id_seguimiento))
+        cursor.execute(query, (seguimiento.id_tracking, seguimiento.fin, seguimiento.confianza_promedio, seguimiento.estado, seguimiento.id_visita, seguimiento.id_camara, id_seguimiento))
         seguimiento_actualizado = cursor.fetchone()
         conn.commit()
         conn.close()

@@ -10,5 +10,5 @@ class Zonas(BaseModel):
     capacidad_maxima: int
     poligono: Optional[Dict[str, Any]] = None
     estado : bool = True
-    creado: Optional[datetime] = None
-    actualizado: Optional[datetime] = None
+    
+    

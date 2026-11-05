@@ -12,8 +12,6 @@ class Alertas(BaseModel):
     estado: bool = True
     estado_resolucion: str
     fecha_resolucion:  str
-    creado: Optional[datetime] = None
-    actualizado: Optional[datetime] = None
     id_usuario_resuelve: int
     id_visita: int
     id_zona: int

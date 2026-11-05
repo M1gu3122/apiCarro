@@ -25,10 +25,10 @@ class Tipos_vehiculoRepository:
         conn = self.db.get_connection()
         cursor = conn.cursor()
         query = """
-            INSERT INTO tipos_vehiculo (nombre,descripcion,estado,creado,actualizado) 
-            VALUES (%s, %s, %s, %s, %s) RETURNING id_tipo;
+            INSERT INTO tipos_vehiculo (nombre,descripcion,estado) 
+            VALUES (%s, %s, %s) RETURNING id_tipo;
         """
-        cursor.execute(query, (tipo_vehiculo.nombre, tipo_vehiculo.descripcion, tipo_vehiculo.estado, tipo_vehiculo.creado, tipo_vehiculo.actualizado))
+        cursor.execute(query, (tipo_vehiculo.nombre, tipo_vehiculo.descripcion, tipo_vehiculo.estado))
         nuevo_tipo = cursor.fetchone()['id_tipo']
         conn.commit()
         conn.close()
@@ -48,11 +48,11 @@ class Tipos_vehiculoRepository:
         cursor = conn.cursor()
         query = """
             UPDATE tipos_vehiculo
-            SET nombre = %s, descripcion = %s, estado = %s, creado = %s, actualizado = %s
+            SET nombre = %s, descripcion = %s, estado = %s
             WHERE id_tipo = %s
             RETURNING id_tipo;
         """
-        cursor.execute(query, (tipo_vehiculo.nombre, tipo_vehiculo.descripcion, tipo_vehiculo.estado, tipo_vehiculo.creado, tipo_vehiculo.actualizado, id_tipo))
+        cursor.execute(query, (tipo_vehiculo.nombre, tipo_vehiculo.descripcion, tipo_vehiculo.estado, id_tipo))
         tipo_actualizado = cursor.fetchone()
         conn.commit()
         conn.close()

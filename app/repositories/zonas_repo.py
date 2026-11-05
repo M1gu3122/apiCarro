@@ -25,10 +25,10 @@ class ZonasRepository:
         conn = self.db.get_connection()
         cursor = conn.cursor()
         query = """
-            INSERT INTO zonas (nombre,tipo,capacidad_maxima,poligono,estado,creado,actualizado) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id_zona;
+            INSERT INTO zonas (nombre,tipo,capacidad_maxima,poligono,estado) 
+            VALUES (%s, %s, %s, %s, %s) RETURNING id_zona;
         """
-        cursor.execute(query, (zona.nombre, zona.tipo, zona.capacidad_maxima, zona.poligono, zona.estado, zona.creado, zona.actualizado))
+        cursor.execute(query, (zona.nombre, zona.tipo, zona.capacidad_maxima, zona.poligono, zona.estado))
         nueva_zona = cursor.fetchone()['id_zona']
         conn.commit()
         conn.close()
@@ -46,13 +46,14 @@ class ZonasRepository:
     def actualizar(self, id_zona: int, zona: Zonas):
         conn = self.db.get_connection()
         cursor = conn.cursor()
+        
         query = """
             UPDATE zonas
-            SET nombre = %s, tipo = %s, capacidad_maxima = %s, poligono = %s, estado = %s, creado = %s, actualizado = %s
+            SET nombre = %s, tipo = %s, capacidad_maxima = %s, poligono = %s, estado = %s
             WHERE id_zona = %s
             RETURNING id_zona;
         """
-        cursor.execute(query, (zona.nombre, zona.tipo, zona.capacidad_maxima, zona.poligono, zona.estado, zona.creado, zona.actualizado, id_zona))
+        cursor.execute(query, (zona.nombre, zona.tipo, zona.capacidad_maxima, zona.poligono, zona.estado, id_zona))
         zona_actualizada = cursor.fetchone()
         conn.commit()
         conn.close()

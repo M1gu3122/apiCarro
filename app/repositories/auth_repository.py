@@ -20,11 +20,12 @@ def verificar_contrasena(
     )
 
 
-def crear_token(id_usuario: int) -> str:
+def crear_token(usuario: int) -> str:
     ahora = datetime.now(timezone.utc)
 
     payload = {
-        "sub": str(id_usuario),
+        "user_id": str(usuario.id_usuario),
+        "id_rol": str(usuario.id_rol),
         "iat": ahora,
         "exp": ahora + timedelta(minutes=30)
     }

@@ -25,10 +25,10 @@ class Asociaciones_seguimientoRepository:
         conn = self.db.get_connection()
         cursor = conn.cursor()
         query = """
-            INSERT INTO asociaciones_seguimiento (metodo,confianza,resultado,fecha_evaluacion,estado,creado,actualizado,id_seguimiento_origen,id_seguimiento_destino) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id_asociacion;
+            INSERT INTO asociaciones_seguimiento (metodo,confianza,resultado,fecha_evaluacion,actualizado,id_seguimiento_origen,id_seguimiento_destino) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id_asociacion;
         """
-        cursor.execute(query, (asociacion_seguimiento.metodo, asociacion_seguimiento.confianza, asociacion_seguimiento.resultado, asociacion_seguimiento.fecha_evaluacion, asociacion_seguimiento.estado, asociacion_seguimiento.creado, asociacion_seguimiento.actualizado, asociacion_seguimiento.id_seguimiento_origen, asociacion_seguimiento.id_seguimiento_destino))
+        cursor.execute(query, (asociacion_seguimiento.metodo, asociacion_seguimiento.confianza, asociacion_seguimiento.resultado, asociacion_seguimiento.fecha_evaluacion, asociacion_seguimiento.estado, asociacion_seguimiento.id_seguimiento_origen, asociacion_seguimiento.id_seguimiento_destino))
         nueva_asociacion = cursor.fetchone()['id_asociacion']
         conn.commit()
         conn.close()
@@ -48,11 +48,11 @@ class Asociaciones_seguimientoRepository:
         cursor = conn.cursor()
         query = """
             UPDATE asociaciones_seguimiento
-            SET metodo = %s, confianza = %s, resultado = %s, fecha_evaluacion = %s, estado = %s, creado = %s, actualizado = %s, id_seguimiento_origen = %s, id_seguimiento_destino = %s
+            SET metodo = %s, confianza = %s, resultado = %s, fecha_evaluacion = %s, estado = %s, id_seguimiento_origen = %s, id_seguimiento_destino = %s
             WHERE id_asociacion = %s
             RETURNING id_asociacion;
         """
-        cursor.execute(query, (asociacion_seguimiento.metodo, asociacion_seguimiento.confianza, asociacion_seguimiento.resultado, asociacion_seguimiento.fecha_evaluacion, asociacion_seguimiento.estado, asociacion_seguimiento.creado, asociacion_seguimiento.actualizado, asociacion_seguimiento.id_seguimiento_origen, asociacion_seguimiento.id_seguimiento_destino, id_asociacion))
+        cursor.execute(query, (asociacion_seguimiento.metodo, asociacion_seguimiento.confianza, asociacion_seguimiento.resultado, asociacion_seguimiento.fecha_evaluacion, asociacion_seguimiento.estado,asociacion_seguimiento.id_seguimiento_origen, asociacion_seguimiento.id_seguimiento_destino, id_asociacion))
         asociacion_actualizada = cursor.fetchone()
         conn.commit()
         conn.close()

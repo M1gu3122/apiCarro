@@ -25,10 +25,10 @@ class Modulo_x_rolRepository:
         conn = self.db.get_connection()
         cursor = conn.cursor()
         query = """
-            INSERT INTO modulo_x_rol (id_rol,id_modulo,estado,creado,actualizado) 
-            VALUES (%s, %s, %s, %s, %s) RETURNING id_rol, id_modulo;
+            INSERT INTO modulo_x_rol (id_rol,id_modulo,estado) 
+            VALUES (%s, %s, %s) RETURNING id_rol, id_modulo;
         """
-        cursor.execute(query, (modulo_x_rol.id_rol, modulo_x_rol.id_modulo, modulo_x_rol.estado, modulo_x_rol.creado, modulo_x_rol.actualizado))
+        cursor.execute(query, (modulo_x_rol.id_rol, modulo_x_rol.id_modulo, modulo_x_rol.estado))
         nuevo_modulo_x_rol = cursor.fetchone()
         conn.commit()
         conn.close()
@@ -48,11 +48,11 @@ class Modulo_x_rolRepository:
         cursor = conn.cursor()
         query = """
             UPDATE modulo_x_rol
-            SET id_rol = %s, id_modulo = %s, estado = %s, creado = %s, actualizado = %s
+            SET id_rol = %s, id_modulo = %s, estado = %s
             WHERE id_rol = %s AND id_modulo = %s
             RETURNING id_rol, id_modulo;
         """
-        cursor.execute(query, (modulo_x_rol.id_rol, modulo_x_rol.id_modulo, modulo_x_rol.estado, modulo_x_rol.creado, modulo_x_rol.actualizado, id_rol, id_modulo))
+        cursor.execute(query, (modulo_x_rol.id_rol, modulo_x_rol.id_modulo, modulo_x_rol.estado, id_rol, id_modulo))
         modulo_x_rol_actualizado = cursor.fetchone()
         conn.commit()
         conn.close()

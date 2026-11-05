@@ -25,10 +25,10 @@ class CamarasRepository:
         conn = self.db.get_connection()
         cursor = conn.cursor()
         query = """
-            INSERT INTO camaras (nombre,ubicacion,fecha_registro,estado,creado,actualizado,id_zona) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id_camara;
+            INSERT INTO camaras (nombre,ubicacion,fecha_registro,estado,id_zona) 
+            VALUES (%s, %s, %s, %s, %s) RETURNING id_camara;
         """
-        cursor.execute(query, (camara.nombre, camara.ubicacion, camara.fecha_registro, camara.estado, camara.creado, camara.actualizado, camara.id_zona))
+        cursor.execute(query, (camara.nombre, camara.ubicacion, camara.fecha_registro, camara.estado, camara.id_zona))
         nueva_camara = cursor.fetchone()['id_camara']
         conn.commit()
         conn.close()
@@ -48,11 +48,11 @@ class CamarasRepository:
         cursor = conn.cursor()
         query = """
             UPDATE camaras
-            SET nombre = %s, ubicacion = %s, fecha_registro = %s, estado = %s, creado = %s, actualizado = %s, id_zona = %s
+            SET nombre = %s, ubicacion = %s, fecha_registro = %s, estado = %s, id_zona = %s
             WHERE id_camara = %s
             RETURNING id_camara;
         """
-        cursor.execute(query, (camara.nombre, camara.ubicacion, camara.fecha_registro, camara.estado, camara.creado, camara.actualizado, camara.id_zona, id_camara))
+        cursor.execute(query, (camara.nombre, camara.ubicacion, camara.fecha_registro, camara.estado, camara.id_zona, id_camara))
         camara_actualizada = cursor.fetchone()
         conn.commit()
         conn.close()

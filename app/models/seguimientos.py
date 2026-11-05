@@ -11,8 +11,6 @@ class Seguimientos(BaseModel):
     fin: Optional[datetime] = None
     confianza_promedio: Optional[Decimal] = None
     estado: bool = True
-    creado: Optional[datetime] = None
-    actualizado: Optional[datetime] = None
     id_visita: int
     id_camara: int
     

@@ -8,6 +8,4 @@ class Camaras(BaseModel):
     ubicacion: str
     fecha_registro: datetime
     estado: bool = True
-    creado: Optional[datetime] = None
-    actualizado: Optional[datetime] = None
     id_zona: int

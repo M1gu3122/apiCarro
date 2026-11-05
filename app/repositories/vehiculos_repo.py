@@ -25,10 +25,10 @@ class VehiculosRepository:
         conn = self.db.get_connection()
         cursor = conn.cursor()
         query = """
-            INSERT INTO vehiculos (placa,marca,modelo,color,fecha_registro,estado,creado,actualizado,id_tipo) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id_vehiculo;
+            INSERT INTO vehiculos (placa,marca,modelo,color,fecha_registro,estado,id_tipo) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id_vehiculo;
         """
-        cursor.execute(query, (vehiculo.placa, vehiculo.marca, vehiculo.modelo, vehiculo.color, vehiculo.fecha_registro, vehiculo.estado, vehiculo.creado, vehiculo.actualizado, vehiculo.id_tipo))
+        cursor.execute(query, (vehiculo.placa, vehiculo.marca, vehiculo.modelo, vehiculo.color, vehiculo.fecha_registro, vehiculo.estado, vehiculo.id_tipo))
         nuevo_vehiculo = cursor.fetchone()['id_vehiculo']
         conn.commit()
         conn.close()
@@ -48,11 +48,11 @@ class VehiculosRepository:
         cursor = conn.cursor()
         query = """
             UPDATE vehiculos
-            SET placa = %s, marca = %s, modelo = %s, color = %s, fecha_registro = %s, estado = %s, creado = %s, actualizado = %s, id_tipo = %s
+            SET placa = %s, marca = %s, modelo = %s, color = %s, fecha_registro = %s, estado = %s, id_tipo = %s
             WHERE id_vehiculo = %s
             RETURNING id_vehiculo;
         """
-        cursor.execute(query, (vehiculo.placa, vehiculo.marca, vehiculo.modelo, vehiculo.color, vehiculo.fecha_registro, vehiculo.estado, vehiculo.creado, vehiculo.actualizado, vehiculo.id_tipo, id_vehiculo))
+        cursor.execute(query, (vehiculo.placa, vehiculo.marca, vehiculo.modelo, vehiculo.color, vehiculo.fecha_registro, vehiculo.estado, vehiculo.id_tipo, id_vehiculo))
         vehiculo_actualizado = cursor.fetchone()
         conn.commit()
         conn.close()

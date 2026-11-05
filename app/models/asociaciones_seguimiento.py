@@ -10,8 +10,6 @@ class Asociaciones_seguimiento(BaseModel):
     resultado: str
     fecha_evaluacion: datetime
     estado: bool = True
-    creado: Optional[datetime] = None
-    actualizado: Optional[datetime] = None
     id_seguimiento_origen: int
     id_seguimiento_destino: int
     

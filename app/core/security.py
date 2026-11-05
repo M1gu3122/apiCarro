@@ -34,6 +34,20 @@ def hashear_contrasena(contrasena: str) -> str:
     return generar_hash(contrasena)
 
 
+def es_hash_contrasena(valor: str) -> bool:
+    """Indica si el valor ya viene cifrado (hash bcrypt)."""
+    if not isinstance(valor, str):
+        return False
+    return valor.startswith(("$2a$", "$2b$", "$2y$"))
+
+
+def asegurar_hash_contrasena(valor: str) -> str:
+    """Cifra la contraseña solo si todavía no es un hash bcrypt."""
+    if es_hash_contrasena(valor):
+        return valor
+    return hashear_contrasena(valor)
+
+
 def verificar_contrasena(
     contrasena: str,
     contrasena_hash: str
@@ -47,11 +61,12 @@ def verificar_contrasena(
         return False
 
 
-def crear_token(id_usuario: int) -> str:
+def crear_token(id_usuario: int, id_rol: int) -> str:
     ahora = datetime.now(timezone.utc)
 
     payload = {
         "sub": str(id_usuario),
+        "id_rol": str(id_rol),
         "iat": ahora,
         "exp": ahora + timedelta(minutes=TOKEN_MINUTOS)
     }

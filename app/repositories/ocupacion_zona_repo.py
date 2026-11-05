@@ -25,10 +25,10 @@ class Ocupacion_zonaRepository:
         conn = self.db.get_connection()
         cursor = conn.cursor()
         query = """
-            INSERT INTO ocupacion_zona (fecha_hora,cantidad_vehiculos,estado,creado,actualizado,id_zona) 
-            VALUES (%s, %s, %s, %s, %s, %s) RETURNING id_ocupacion;
+            INSERT INTO ocupacion_zona (fecha_hora,cantidad_vehiculos,estado,id_zona) 
+            VALUES (%s, %s, %s, %s) RETURNING id_ocupacion;
         """
-        cursor.execute(query, (ocupacion_zona.fecha_hora, ocupacion_zona.cantidad_vehiculos, ocupacion_zona.estado, ocupacion_zona.creado, ocupacion_zona.actualizado, ocupacion_zona.id_zona))
+        cursor.execute(query, (ocupacion_zona.fecha_hora, ocupacion_zona.cantidad_vehiculos, ocupacion_zona.estado, ocupacion_zona.id_zona))
         nueva_ocupacion = cursor.fetchone()['id_ocupacion']
         conn.commit()
         conn.close()
@@ -48,11 +48,11 @@ class Ocupacion_zonaRepository:
         cursor = conn.cursor()
         query = """
             UPDATE ocupacion_zona
-            SET fecha_hora = %s, cantidad_vehiculos = %s, estado = %s, creado = %s, actualizado = %s, id_zona = %s
+            SET fecha_hora = %s, cantidad_vehiculos = %s, estado = %s, id_zona = %s
             WHERE id_ocupacion = %s
             RETURNING id_ocupacion;
         """
-        cursor.execute(query, (ocupacion_zona.fecha_hora, ocupacion_zona.cantidad_vehiculos, ocupacion_zona.estado, ocupacion_zona.creado, ocupacion_zona.actualizado, ocupacion_zona.id_zona, id_ocupacion))
+        cursor.execute(query, (ocupacion_zona.fecha_hora, ocupacion_zona.cantidad_vehiculos, ocupacion_zona.estado, ocupacion_zona.id_zona, id_ocupacion))
         ocupacion_actualizada = cursor.fetchone()
         conn.commit()
         conn.close()

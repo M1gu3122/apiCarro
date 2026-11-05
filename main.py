@@ -14,7 +14,10 @@ from app.api import (
     rutas_tipos_vehiculo,
     rutas_zonas,
     rutas_usuarios,
+    rutas_visitas,
+    rutas_vehiculos,
     auth_routes
+    
 )
 
 app = FastAPI(
@@ -46,3 +49,5 @@ app.include_router(rutas_tipos_vehiculo.router)
 app.include_router(rutas_zonas.router)
 app.include_router(rutas_usuarios.router)
 app.include_router(auth_routes.router)
+app.include_router(rutas_visitas.router)
+app.include_router(rutas_vehiculos.router)

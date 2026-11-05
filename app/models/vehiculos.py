@@ -10,6 +10,4 @@ class Vehiculos(BaseModel):
     color: str
     fecha_registro: datetime
     estado: bool = True
-    creado: Optional[datetime] = None
-    actualizado: Optional[datetime] = None
     id_tipo: int

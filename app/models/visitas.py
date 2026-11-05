@@ -8,7 +8,5 @@ class Visitas(BaseModel):
     fecha_entrada: datetime
     fecha_salida: datetime
     estado: bool = True
-    creado: Optional[datetime] = None
-    actualizado: Optional[datetime] = None
     id_vehiculo: int
     

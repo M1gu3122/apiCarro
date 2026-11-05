@@ -7,6 +7,4 @@ class Ocupacion_zona(BaseModel):
     fecha_hora: datetime
     cantidad_vehiculos: int
     estado: bool = True
-    creado: Optional[datetime] = None
-    actualizado: Optional[datetime] = None
     id_zona: int

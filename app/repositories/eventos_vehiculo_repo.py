@@ -25,10 +25,10 @@ class Eventos_vehiculoRepository:
         conn = self.db.get_connection()
         cursor = conn.cursor()
         query = """
-            INSERT INTO eventos_vehiculo (tipo_evento,fecha_hora,confianza,estado,creado,actualizado,id_visita,id_camara,id_seguimiento,id_zona) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id_evento;
+            INSERT INTO eventos_vehiculo (tipo_evento,fecha_hora,confianza,estado,id_visita,id_camara,id_seguimiento,id_zona) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING id_evento;
         """
-        cursor.execute(query, (evento.tipo_evento, evento.fecha_hora, evento.confianza, evento.estado, evento.creado, evento.actualizado, evento.id_visita, evento.id_camara, evento.id_seguimiento, evento.id_zona))
+        cursor.execute(query, (evento.tipo_evento, evento.fecha_hora, evento.confianza, evento.estado, evento.id_visita, evento.id_camara, evento.id_seguimiento, evento.id_zona))
         nuevo_evento = cursor.fetchone()['id_evento']
         conn.commit()
         conn.close()
@@ -48,11 +48,11 @@ class Eventos_vehiculoRepository:
         cursor = conn.cursor()
         query = """
             UPDATE eventos_vehiculo
-            SET tipo_evento = %s, fecha_hora = %s, confianza = %s, estado = %s, creado = %s, actualizado = %s, id_visita = %s, id_camara = %s, id_seguimiento = %s, id_zona = %s
+            SET tipo_evento = %s, fecha_hora = %s, confianza = %s, estado = %s, id_visita = %s, id_camara = %s, id_seguimiento = %s, id_zona = %s
             WHERE id_evento = %s
             RETURNING id_evento;
         """
-        cursor.execute(query, (evento.tipo_evento, evento.fecha_hora, evento.confianza, evento.estado, evento.creado, evento.actualizado, evento.id_visita, evento.id_camara, evento.id_seguimiento, evento.id_zona, id_evento))
+        cursor.execute(query, (evento.tipo_evento, evento.fecha_hora, evento.confianza, evento.estado, evento.id_visita, evento.id_camara, evento.id_seguimiento, evento.id_zona, id_evento))
         evento_actualizado = cursor.fetchone()
         conn.commit()
         conn.close()

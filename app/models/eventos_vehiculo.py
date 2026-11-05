@@ -9,8 +9,6 @@ class EventoVehiculo(BaseModel):
     fecha_hora: Optional[datetime] = None
     confianza: Optional[Decimal] = None
     estado: bool = True
-    creado: Optional[datetime] = None
-    actualizado: Optional[datetime] = None
     id_visita: int
     id_camara: int
     id_seguimiento: Optional[int] = None

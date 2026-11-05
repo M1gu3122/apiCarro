@@ -18,7 +18,7 @@ class UsuariosRepository:
     def obtener_por_id(self, id_usuario: int):
         conn = self.db.get_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM usuarios WHERE id = %s;", (id_usuario,))
+        cursor.execute("SELECT * FROM usuarios WHERE id_usuario = %s;", (id_usuario,))
         Usuarios = cursor.fetchone()
         conn.close()
         return Usuarios
@@ -58,7 +58,7 @@ class UsuariosRepository:
     def eliminar(self, id_usuario: int):
         conn = self.db.get_connection()
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM usuarios WHERE id = %s RETURNING id;", (id_usuario,))
+        cursor.execute("DELETE FROM usuarios WHERE id_usuario = %s RETURNING id_usuario;", (id_usuario,))
         eliminado = cursor.fetchone()
         conn.commit()
         conn.close()
@@ -69,11 +69,11 @@ class UsuariosRepository:
         cursor = conn.cursor()
         query = """
             UPDATE usuarios
-            SET nombre = %s, grado = %s, promedio = %s
-            WHERE id = %s
-            RETURNING id;
+            SET nombre = %s, correo = %s, contrasena_hash = %s, estado = %s, id_rol = %s
+            WHERE id_usuario = %s
+            RETURNING id_usuario;
         """
-        cursor.execute(query, (Usuarios.nombre, Usuarios.grado, Usuarios.promedio, id_usuario))
+        cursor.execute(query, (Usuarios.nombre,Usuarios.correo, Usuarios.contrasena_hash, Usuarios.estado, Usuarios.id_rol, id_usuario))
         actualizado = cursor.fetchone()
         conn.commit()
         conn.close()

@@ -25,10 +25,10 @@ class VisitasRepository:
         conn = self.db.get_connection()
         cursor = conn.cursor()
         query = """
-            INSERT INTO visitas (fecha_entrada,fecha_salida,estado,creado,actualizado,id_vehiculo) 
-            VALUES (%s, %s, %s, %s, %s, %s) RETURNING id_visita;
+            INSERT INTO visitas (fecha_entrada,fecha_salida,estado,id_vehiculo) 
+            VALUES (%s, %s, %s, %s) RETURNING id_visita;
         """
-        cursor.execute(query, (visita.fecha_entrada, visita.fecha_salida, visita.estado, visita.creado, visita.actualizado, visita.id_vehiculo))
+        cursor.execute(query, (visita.fecha_entrada, visita.fecha_salida, visita.estado, visita.id_vehiculo))
         nueva_visita = cursor.fetchone()['id_visita']
         conn.commit()
         conn.close()
@@ -48,11 +48,11 @@ class VisitasRepository:
         cursor = conn.cursor()
         query = """
             UPDATE visitas
-            SET fecha_entrada = %s, fecha_salida = %s, estado = %s, creado = %s, actualizado = %s, id_vehiculo = %s
+            SET fecha_entrada = %s, fecha_salida = %s, estado = %s, id_vehiculo = %s
             WHERE id_visita = %s
             RETURNING id_visita;
         """
-        cursor.execute(query, (visita.fecha_entrada, visita.fecha_salida, visita.estado, visita.creado, visita.actualizado, visita.id_vehiculo, id_visita))
+        cursor.execute(query, (visita.fecha_entrada, visita.fecha_salida, visita.estado, visita.id_vehiculo, id_visita))
         visita_actualizada = cursor.fetchone()
         conn.commit()
         conn.close()

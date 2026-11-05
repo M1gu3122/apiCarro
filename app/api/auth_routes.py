@@ -34,7 +34,7 @@ def login(datos: LoginRequest):
             detail="Correo o contraseña incorrectos"
         )
 
-    token = crear_token(usuario["id_usuario"])
+    token = crear_token(usuario["id_usuario"], usuario["id_rol"])
 
     return {
         "access_token": token,

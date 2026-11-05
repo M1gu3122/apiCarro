@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from starlette import status
-from app.core.security import hashear_contrasena
-from app.models.usuarios import UsuarioCrear, Usuarios
+from app.models.usuarios import Usuarios
 from app.repositories.usuarios_repo import UsuariosRepository
+from app.core.security import hashear_contrasena, asegurar_hash_contrasena
 
 router = APIRouter(prefix="/usuarios", tags=["Gestión de Usuarios"])
 repo = UsuariosRepository()
@@ -19,19 +19,15 @@ def obtener_usuario(id_usuario: int):
     return usuario
 
 @router.post("/")
-def crear_usuario(datos: UsuarioCrear):
-    if repo.obtener_por_correo(datos.correo):
+def crear_usuario(usuario: Usuarios):
+    if repo.obtener_por_correo(usuario.correo):
         raise HTTPException(
             status_code=409,
             detail="El correo ya está registrado"
         )
 
-    usuario = Usuarios(
-        nombre=datos.nombre,
-        correo=datos.correo,
-        contrasena_hash=hashear_contrasena(datos.contrasena),
-        id_rol=datos.id_rol
-    )
+    # Hashear la contraseña antes de guardar (sin modificar el modelo Usuarios)
+    usuario.contrasena_hash = hashear_contrasena(usuario.contrasena_hash)
 
     nuevo_id = repo.crear(usuario)
 
@@ -48,12 +44,35 @@ def eliminar_usuario(id_usuario: int):
         raise HTTPException(status_code=404, detail="Usuarios no encontrado")
     return {"mensaje": "Usuario eliminado correctamente"}
 
-@router.put("/{id_usuario}")
+@router.put("/{id_usuario}", summary="Actualizar usuario")
 def actualizar_Usuarios(id_usuario: int, Usuarios: Usuarios):
+    """
+    Actualiza un usuario.
+
+    El modelo `Usuarios` exige el registro completo (nombre, correo,
+    contrasena_hash, id_rol y estado), por eso las actualizaciones parciales
+    deben reenviar todos los campos.
+    """
+    contrasena = str(Usuarios.contrasena_hash or "").strip()
+
+    if not contrasena:
+        # Sin contraseña nueva se conserva el hash vigente del usuario.
+        actual = repo.obtener_por_id(id_usuario)
+        if not actual:
+            raise HTTPException(status_code=404, detail="Usuarios no encontrado")
+        Usuarios.contrasena_hash = actual["contrasena_hash"]
+    else:
+        # Se cifra solo cuando el valor recibido todavía no es un hash bcrypt.
+        Usuarios.contrasena_hash = asegurar_hash_contrasena(contrasena)
+
     exito = repo.actualizar(id_usuario, Usuarios)
     if not exito:
         raise HTTPException(status_code=404, detail="Usuarios no encontrado")
-    return {"mensaje": "Usuario actualizado correctamente"}
+
+    return {
+        "mensaje": "Usuario actualizado correctamente",
+        "usuario": repo.obtener_por_id(id_usuario),
+    }
 
 
 
