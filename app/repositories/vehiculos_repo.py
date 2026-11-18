@@ -1,3 +1,5 @@
+from contextlib import closing
+
 from app.core.database import Database
 from app.models.vehiculos import Vehiculos
 
@@ -8,7 +10,12 @@ class VehiculosRepository:
     def obtener_todos(self):
         conn = self.db.get_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM vehiculos ORDER BY id_vehiculo ASC;")
+        cursor.execute("""
+            SELECT v.*, EXISTS (
+                SELECT 1 FROM visitas vi WHERE vi.id_vehiculo = v.id_vehiculo
+            ) AS tiene_visitas
+            FROM vehiculos v ORDER BY v.id_vehiculo ASC;
+        """)
         vehiculos = cursor.fetchall()
         conn.close()
         return vehiculos
@@ -16,7 +23,12 @@ class VehiculosRepository:
     def obtener_por_id(self, id_vehiculo: int):
         conn = self.db.get_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM vehiculos WHERE id_vehiculo = %s;", (id_vehiculo,))
+        cursor.execute("""
+            SELECT v.*, EXISTS (
+                SELECT 1 FROM visitas vi WHERE vi.id_vehiculo = v.id_vehiculo
+            ) AS tiene_visitas
+            FROM vehiculos v WHERE v.id_vehiculo = %s;
+        """, (id_vehiculo,))
         vehiculo = cursor.fetchone()
         conn.close()
         return vehiculo
@@ -34,14 +46,13 @@ class VehiculosRepository:
         conn.close()
         return nuevo_vehiculo
 
-    def eliminar(self, id_vehiculo: int):
-        conn = self.db.get_connection()
-        cursor = conn.cursor()
-        cursor.execute("DELETE FROM vehiculos WHERE id_vehiculo = %s RETURNING id_vehiculo;", (id_vehiculo,))
-        vehiculo_eliminado = cursor.fetchone()
-        conn.commit()
-        conn.close()
-        return vehiculo_eliminado is not None
+    def desactivar(self, id_vehiculo: int):
+        with closing(self.db.get_connection()) as conn, conn, conn.cursor() as cursor:
+            cursor.execute(
+                "UPDATE vehiculos SET estado = FALSE WHERE id_vehiculo = %s RETURNING id_vehiculo;",
+                (id_vehiculo,),
+            )
+            return cursor.fetchone() is not None
 
     def actualizar(self, id_vehiculo: int, vehiculo: Vehiculos):
         conn = self.db.get_connection()

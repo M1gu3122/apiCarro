@@ -57,3 +57,21 @@ class Modulo_x_rolRepository:
         conn.commit()
         conn.close()
         return modulo_x_rol_actualizado is not None
+    def obtener_habilitados_por_usuario(self, id_usuario: int):
+        conn = self.db.get_connection()
+        if conn is None:
+            raise RuntimeError("Base de datos no disponible")
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute("""
+                    SELECT m.id_modulo, m.nombre_modulo
+                    FROM usuarios u
+                    INNER JOIN roles r ON r.id_rol = u.id_rol AND r.estado IS TRUE
+                    INNER JOIN modulo_x_rol mr ON mr.id_rol = r.id_rol AND mr.estado IS TRUE
+                    INNER JOIN modulo m ON m.id_modulo = mr.id_modulo AND m.estado IS TRUE
+                    WHERE u.id_usuario = %s AND u.estado IS TRUE
+                    ORDER BY m.id_modulo
+                """, (id_usuario,))
+                return cursor.fetchall()
+        finally:
+            conn.close()

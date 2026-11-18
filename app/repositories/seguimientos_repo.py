@@ -57,3 +57,21 @@ class SeguimientosRepository:
         conn.commit()
         conn.close()
         return seguimiento_actualizado is not None
+    def obtener_catalogos(self):
+        conn = self.db.get_connection()
+        if conn is None:
+            raise RuntimeError("Base de datos no disponible")
+        try:
+            resultado = {}
+            with conn.cursor() as cursor:
+                cursor.execute('SELECT id_visita, id_vehiculo FROM visitas ORDER BY id_visita')
+                resultado['visitas'] = cursor.fetchall()
+                cursor.execute('SELECT id_vehiculo, placa FROM vehiculos ORDER BY id_vehiculo')
+                resultado['vehiculos'] = cursor.fetchall()
+                cursor.execute('SELECT id_camara, nombre, id_zona FROM camaras ORDER BY id_camara')
+                resultado['camaras'] = cursor.fetchall()
+                cursor.execute('SELECT id_zona, nombre FROM zonas ORDER BY id_zona')
+                resultado['zonas'] = cursor.fetchall()
+            return resultado
+        finally:
+            conn.close()

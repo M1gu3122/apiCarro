@@ -9,6 +9,10 @@ repo = SeguimientosRepository()
 def listar_seguimientos():
     return repo.obtener_todos()
 
+@router.get("/catalogos")
+def obtener_catalogos():
+    return repo.obtener_catalogos()
+
 @router.get("/{id_seguimiento}")
 def obtener_seguimiento(id_seguimiento: int):
     seguimiento = repo.obtener_por_id(id_seguimiento)
