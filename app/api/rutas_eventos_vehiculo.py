@@ -9,6 +9,10 @@ repo = Eventos_vehiculoRepository()
 def listar_eventos_vehiculo():
     return repo.obtener_todos()
 
+@router.get("/catalogos")
+def obtener_catalogos():
+    return repo.obtener_catalogos()
+
 @router.get("/{id_evento}")
 def obtener_evento_vehiculo(id_evento: int):
     evento = repo.obtener_por_id(id_evento)

@@ -22,11 +22,11 @@ def crear_vehiculo(vehiculo: Vehiculos):
     return {"mensaje": "vehiculo registrado exitosamente", "id": nuevo_id}
 
 @router.delete("/{id_vehiculo}")
-def eliminar_vehiculo(id_vehiculo: int):
-    exito = repo.eliminar(id_vehiculo)
+def desactivar_vehiculo(id_vehiculo: int):
+    exito = repo.desactivar(id_vehiculo)
     if not exito:
         raise HTTPException(status_code=404, detail="vehiculo no encontrado")
-    return {"mensaje": "vehiculo eliminado correctamente"}
+    return {"mensaje": "vehiculo desactivado correctamente"}
 
 @router.put("/{id_vehiculo}")
 def actualizar_vehiculo(id_vehiculo: int, vehiculo: Vehiculos):
