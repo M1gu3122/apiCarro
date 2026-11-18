@@ -78,18 +78,3 @@ class UsuariosRepository:
         conn.commit()
         conn.close()
         return actualizado is not None
-
-    def obtener_perfil_sesion(self, id_usuario: int):
-        conn = self.db.get_connection()
-        if conn is None:
-            raise RuntimeError("Base de datos no disponible")
-        try:
-            with conn.cursor() as cursor:
-                cursor.execute("""
-                    SELECT u.id_usuario, u.nombre, u.correo, u.id_rol, u.estado, r.nombre AS rol, COALESCE(r.solo_lectura, FALSE) AS solo_lectura
-                    FROM usuarios u LEFT JOIN roles r ON r.id_rol = u.id_rol
-                    WHERE u.id_usuario = %s
-                """, (id_usuario,))
-                return cursor.fetchone()
-        finally:
-            conn.close()

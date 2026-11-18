@@ -16,11 +16,7 @@ class VisitasRepository:
     def obtener_por_id(self, id_visita: int):
         conn = self.db.get_connection()
         cursor = conn.cursor()
-        cursor.execute("""
-            SELECT v.*, ve.placa, ve.marca, ve.modelo, ve.color
-            FROM visitas v LEFT JOIN vehiculos ve ON ve.id_vehiculo = v.id_vehiculo
-            WHERE v.id_visita = %s
-        """, (id_visita,))
+        cursor.execute("SELECT * FROM visitas WHERE id_visita = %s;", (id_visita,))
         visita = cursor.fetchone()
         conn.close()
         return visita
@@ -61,15 +57,3 @@ class VisitasRepository:
         conn.commit()
         conn.close()
         return visita_actualizada is not None
-    def obtener_catalogos(self):
-        conn = self.db.get_connection()
-        if conn is None:
-            raise RuntimeError("Base de datos no disponible")
-        try:
-            resultado = {}
-            with conn.cursor() as cursor:
-                cursor.execute('SELECT id_vehiculo, placa, marca, modelo, color FROM vehiculos ORDER BY placa, id_vehiculo')
-                resultado['vehiculos'] = cursor.fetchall()
-            return resultado
-        finally:
-            conn.close()

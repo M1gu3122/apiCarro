@@ -9,10 +9,6 @@ repo = VisitasRepository()
 def listar_visitas():
     return repo.obtener_todos()
 
-@router.get("/catalogos")
-def obtener_catalogos():
-    return repo.obtener_catalogos()
-
 @router.get("/{id_visita}")
 def obtener_visita(id_visita: int):
     visita = repo.obtener_por_id(id_visita)
